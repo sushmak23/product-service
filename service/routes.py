@@ -45,3 +45,27 @@ def delete_product(product_id):
     db.session.commit()
 
     return jsonify({"message": "Product deleted successfully"}), 200
+
+@app.route("/api/products", methods=["GET"])
+def list_all_products():
+    """Endpoint to list all products"""
+    products = Product.query.all()
+    return jsonify([product.serialize() for product in products]), 200
+
+@app.route("/api/products/name/<string:name>", methods=["GET"])
+def list_products_by_name(name):
+    """Endpoint to list products by name"""
+    products = Product.query.filter(Product.name.ilike(f"%{name}%")).all()
+    return jsonify([product.serialize() for product in products]), 200
+
+@app.route("/api/products/category/<string:category>", methods=["GET"])
+def list_products_by_category(category):
+    """Endpoint to list products by category"""
+    products = Product.query.filter(Product.category.ilike(f"%{category}%")).all()
+    return jsonify([product.serialize() for product in products]), 200
+
+@app.route("/api/products/availability/<bool:available>", methods=["GET"])
+def list_products_by_availability(available):
+    """Endpoint to list products by availability"""
+    products = Product.query.filter_by(available=available).all()
+    return jsonify([product.serialize() for product in products]), 200

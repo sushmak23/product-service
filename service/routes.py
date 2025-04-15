@@ -33,3 +33,15 @@ def update_product(product_id):
 
     return jsonify(product.serialize()), 200
 
+@app.route("/api/products/<int:product_id>", methods=["DELETE"])
+def delete_product(product_id):
+    """Endpoint to delete a product by its ID"""
+    product = Product.query.get(product_id)
+    
+    if not product:
+        return jsonify({"error": "Product not found"}), 404
+
+    db.session.delete(product)
+    db.session.commit()
+
+    return jsonify({"message": "Product deleted successfully"}), 200
